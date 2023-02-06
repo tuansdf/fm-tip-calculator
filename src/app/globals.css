@@ -13,3 +13,11 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+*:focus {
+  outline: 0;
+}
+
+*:focus-visible {
+  @apply border-transparent ring-2 ring-primary ring-offset-1;
+}

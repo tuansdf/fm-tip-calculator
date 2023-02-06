@@ -15,6 +15,7 @@ module.exports = {
         500: "hsl(183, 100%, 15%)",
       },
       error: colors.red,
+      transparent: colors.transparent,
     },
   },
   plugins: [],
