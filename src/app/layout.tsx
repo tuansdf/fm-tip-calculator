@@ -1,14 +1,16 @@
+import { ReactNode } from "react";
 import "./globals.css";
+import { primaryFont } from "/src/app/fonts";
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+interface IProps {
+  children: ReactNode;
+}
+
+export default function RootLayout({ children }: IProps) {
   return (
     <html lang="en">
       <head />
-      <body>{children}</body>
+      <body className={primaryFont.className + " font-bold"}>{children}</body>
     </html>
   );
 }
