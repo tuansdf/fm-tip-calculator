@@ -2,15 +2,15 @@ import clsx from "clsx";
 import { InputHTMLAttributes, ReactNode, useId } from "react";
 
 interface IProps extends InputHTMLAttributes<HTMLInputElement> {
-  label: string;
-  icon: ReactNode;
+  label?: string;
+  icon?: ReactNode;
 }
 
 export default function TextField({ label, icon, ...rest }: IProps) {
   const inputId = useId();
 
   return (
-    <div className="w-full">
+    <div className="flex w-full flex-col gap-1">
       {label ? (
         <label htmlFor={inputId} className="text-neutral-400">
           {label}
@@ -20,7 +20,7 @@ export default function TextField({ label, icon, ...rest }: IProps) {
         <input
           id={inputId}
           className={clsx(
-            "w-full rounded-lg bg-neutral-100 p-3 text-end text-xl lg:text-2xl",
+            "w-full rounded-lg bg-neutral-100 p-3 text-end text-xl placeholder:text-neutral-400 lg:text-2xl",
             icon ? "pl-8" : "pl-3"
           )}
           {...rest}
