@@ -7,11 +7,18 @@ import IconPerson from "/src/app/icon-person";
 import TextField from "/src/app/text-field";
 
 interface IFormInputs {
-  bill?: number;
-  people?: number;
-  radioTipRate?: number;
-  customTipRate?: number;
+  bill: string;
+  people: string;
+  radioTipRate: string;
+  customTipRate: string;
 }
+
+const initialFormInputs: IFormInputs = {
+  bill: "",
+  people: "",
+  radioTipRate: "",
+  customTipRate: "",
+};
 
 const tipRateOptions = [
   {
@@ -37,13 +44,10 @@ const tipRateOptions = [
 ];
 
 export default function Page() {
-  const {
-    setValue,
-    reset,
-    register,
-    watch,
-    formState: { errors },
-  } = useForm<IFormInputs>({ mode: "onChange" });
+  const { setValue, reset, register, watch } = useForm<IFormInputs>({
+    defaultValues: initialFormInputs,
+    mode: "onChange",
+  });
 
   const bill = Number(watch("bill"));
   const people = Number(watch("people"));
@@ -98,7 +102,7 @@ export default function Page() {
                       id={id}
                       value={option.value}
                       {...register("radioTipRate", {
-                        onChange: () => setValue("customTipRate", undefined),
+                        onChange: () => setValue("customTipRate", ""),
                       })}
                     />
                   </div>
@@ -109,7 +113,7 @@ export default function Page() {
                 placeholder="Custom"
                 endIcon={<span className="text-2xl text-neutral-400">%</span>}
                 {...register("customTipRate", {
-                  onChange: () => setValue("radioTipRate", undefined),
+                  onChange: () => setValue("radioTipRate", ""),
                 })}
               />
             </div>
@@ -155,7 +159,7 @@ export default function Page() {
           </div>
 
           {/* reset */}
-          <Button onClick={() => reset()} isPrimary>
+          <Button onClick={() => reset(initialFormInputs)} isPrimary>
             Reset
           </Button>
         </div>
