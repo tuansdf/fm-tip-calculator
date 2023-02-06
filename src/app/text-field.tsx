@@ -29,7 +29,7 @@ const TextField = forwardRef<HTMLInputElement, IProps>(
             ref={ref}
             id={inputId}
             className={clsx(
-              "w-full rounded-lg border bg-neutral-100 p-3 text-end text-2xl placeholder:text-neutral-400",
+              "h-12 w-full rounded-lg border bg-neutral-100 px-3 text-end text-2xl placeholder:text-neutral-400",
               startIcon ? "pl-10" : "pl-3",
               endIcon ? "pr-10" : "pr-3",
               errorMessage ? "border-error-500" : "border-neutral-100"

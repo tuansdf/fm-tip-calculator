@@ -72,19 +72,13 @@ export default function Page() {
             label="Bill"
             startIcon={<IconDollar />}
             placeholder="0"
-            errorMessage={errors.bill && "Can't be zero"}
             {...register("bill")}
           />
 
           <div>
-            <div className="flex justify-between">
-              <label htmlFor="" className="mb-4 block text-neutral-400">
-                Select tip %
-              </label>
-              {errors.radioTipRate ? (
-                <span className="text-error-500">Can&apos;t be zero</span>
-              ) : null}
-            </div>
+            <label htmlFor="" className="mb-4 block text-neutral-400">
+              Select tip %
+            </label>
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
               {tipRateOptions.map((option) => {
                 const id = "tip-rate-" + option.value;
@@ -126,7 +120,7 @@ export default function Page() {
             label="Number of People"
             startIcon={<IconPerson />}
             placeholder="0"
-            errorMessage={errors.people && "Can't be zero"}
+            errorMessage={!people ? "Can't be zero" : ""}
             {...register("people")}
           />
         </div>
