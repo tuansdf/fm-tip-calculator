@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Button from "/src/app/button";
 import IconDollar from "/src/app/icon-dollar";
@@ -8,10 +7,10 @@ import IconPerson from "/src/app/icon-person";
 import TextField from "/src/app/text-field";
 
 interface IFormInputs {
-  bill: number;
-  tipRate: number;
-  people: number;
-  customTipRate: number;
+  bill?: number;
+  people?: number;
+  radioTipRate?: number;
+  customTipRate?: number;
 }
 
 const tipRateOptions = [
@@ -38,124 +37,126 @@ const tipRateOptions = [
 ];
 
 export default function Page() {
-  const [billInput, setBillInput] = useState<string>("");
-  const [tipRateInput, setTipRateInput] = useState<string>("");
-  const [peopleInput, setPeopleInput] = useState<string>("");
-
-  const [customTip, setCustomTip] = useState<string>("");
-
   const {
-    handleSubmit,
+    setValue,
     reset,
     register,
     watch,
     formState: { errors },
   } = useForm<IFormInputs>({ mode: "onChange" });
 
-  const bill = parseFloat(billInput) || 0;
-  const tipRate =
-    (customTip ? parseFloat(customTip) / 100 : parseFloat(tipRateInput)) || 0;
-  const people = parseInt(peopleInput) || 0;
+  const bill = Number(watch("bill"));
+  const people = Number(watch("people"));
+  const radioTipRate = Number(watch("radioTipRate"));
+  const customTipRate = Number(watch("customTipRate")) / 100;
 
-  const tipTotal = tipRate * bill;
-  const total = bill + tipTotal;
-  const tipEach = tipTotal / people;
-  const totalEach = total / people;
+  const tipRate = radioTipRate || customTipRate;
+
+  const tip = bill * tipRate;
+  const total = bill + tip;
+  const tipEach = tip / people || 0;
+  const totalEach = total / people || 0;
 
   return (
-    <div className="mx-auto flex w-full max-w-sm flex-1 flex-col">
-      <h1 className="m-8 text-center text-2xl uppercase tracking-[0.5em]">
+    <div className="mx-auto flex w-full max-w-md flex-1 flex-col px-8 lg:max-w-screen-lg lg:items-center lg:justify-center">
+      <h1 className="m-8 text-center text-2xl uppercase tracking-[0.5em] text-neutral-400 lg:m-0 lg:mb-20">
         spli
         <br />
         tter
       </h1>
 
-      <div className="flex-1 space-y-8 rounded-t-3xl bg-neutral-0 p-8">
-        <TextField
-          type="number"
-          label="Bill"
-          startIcon={<IconDollar />}
-          placeholder="0"
-          errorMessage={errors.bill && "Can't be zero"}
-          {...register("bill", { required: true, max: 999_999, min: 0 })}
-        />
+      <div className="flex-1 space-y-8 rounded-t-3xl bg-neutral-0 p-8 lg:grid lg:flex-initial lg:grid-cols-2 lg:gap-10 lg:space-y-0 lg:rounded-3xl lg:p-10">
+        <div className="space-y-8 lg:space-y-12">
+          <TextField
+            type="number"
+            label="Bill"
+            startIcon={<IconDollar />}
+            placeholder="0"
+            errorMessage={errors.bill && "Can't be zero"}
+            {...register("bill")}
+          />
 
-        <div>
-          <div className="flex justify-between">
-            <label htmlFor="" className="mb-4 block text-neutral-400">
-              Select tip %
-            </label>
-            {errors.tipRate ? (
-              <span className="text-error-500">Can&apos;t be zero</span>
-            ) : null}
-          </div>
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
-            {tipRateOptions.map((option) => {
-              const id = "tip-rate-" + option.value;
-              return (
-                <div key={id}>
-                  <label htmlFor={id}>
-                    <Button
-                      isButton={false}
-                      isSelected={
-                        !watch("customTipRate") &&
-                        watch("tipRate") == option.value
-                      }
-                    >
-                      {option.label}
-                    </Button>
-                  </label>
-                  <input
-                    className="hidden"
-                    type="radio"
-                    id={id}
-                    value={option.value}
-                    {...register("tipRate")}
-                  />
-                </div>
-              );
-            })}
-            <TextField
-              type="number"
-              placeholder="Custom"
-              endIcon={<span className="text-2xl text-neutral-400">%</span>}
-              {...register("customTipRate", {
-                max: 999,
-                min: 0,
+          <div>
+            <div className="flex justify-between">
+              <label htmlFor="" className="mb-4 block text-neutral-400">
+                Select tip %
+              </label>
+              {errors.radioTipRate ? (
+                <span className="text-error-500">Can&apos;t be zero</span>
+              ) : null}
+            </div>
+            <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+              {tipRateOptions.map((option) => {
+                const id = "tip-rate-" + option.value;
+                return (
+                  <div key={id}>
+                    <label htmlFor={id}>
+                      <Button
+                        isButton={false}
+                        isSelected={radioTipRate === option.value}
+                      >
+                        {option.label}
+                      </Button>
+                    </label>
+                    <input
+                      className="hidden"
+                      type="radio"
+                      id={id}
+                      value={option.value}
+                      {...register("radioTipRate", {
+                        onChange: () => setValue("customTipRate", undefined),
+                      })}
+                    />
+                  </div>
+                );
               })}
-            />
+              <TextField
+                type="number"
+                placeholder="Custom"
+                endIcon={<span className="text-2xl text-neutral-400">%</span>}
+                {...register("customTipRate", {
+                  onChange: () => setValue("radioTipRate", undefined),
+                })}
+              />
+            </div>
           </div>
+
+          <TextField
+            type="number"
+            label="Number of People"
+            startIcon={<IconPerson />}
+            placeholder="0"
+            errorMessage={errors.people && "Can't be zero"}
+            {...register("people")}
+          />
         </div>
 
-        <TextField
-          type="number"
-          label="Number of People"
-          startIcon={<IconPerson />}
-          placeholder="0"
-          errorMessage={errors.people && "Can't be zero"}
-          {...register("people", { required: true, max: 999_999, min: 0 })}
-        />
+        <div className="h-full space-y-8 rounded-xl bg-neutral-500 p-6 pt-8 lg:flex lg:flex-col lg:p-10 lg:pt-14">
+          <div className="space-y-8 lg:flex-1 lg:space-y-12">
+            {/* tip each */}
+            <div className="flex items-center gap-2">
+              <div className="flex-none">
+                <div className="text-md text-neutral-0">Tip Amount</div>
+                <div className="text-xs text-neutral-300 lg:text-sm">
+                  / person
+                </div>
+              </div>
+              <div className="flex-1 overflow-visible text-end text-3xl text-primary lg:text-5xl">
+                ${tipEach.toFixed(2)}
+              </div>
+            </div>
 
-        <div className="h-full space-y-8 rounded-xl bg-neutral-500 p-6 pt-8">
-          {/* tip each */}
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-lg text-neutral-0">Tip Amount</div>
-              <div className="text-sm text-neutral-300">/ person</div>
-            </div>
-            <div className="text-4xl text-primary">
-              ${tipEach > 0 ? tipEach.toFixed(2) : 0}
-            </div>
-          </div>
-
-          {/* total each */}
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-lg text-neutral-0">Total</div>
-              <div className="text-sm text-neutral-300">/ person</div>
-            </div>
-            <div className="text-4xl text-primary">
-              ${totalEach > 0 ? totalEach.toFixed(2) : 0}
+            {/* total each */}
+            <div className="flex items-center gap-2">
+              <div className="flex-none">
+                <div className="text-md text-neutral-0">Total</div>
+                <div className="text-xs text-neutral-300 lg:text-sm">
+                  / person
+                </div>
+              </div>
+              <div className="flex-1 text-end text-3xl text-primary lg:text-5xl">
+                ${totalEach.toFixed(2)}
+              </div>
             </div>
           </div>
 

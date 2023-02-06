@@ -18,7 +18,7 @@ export default function Button({
   return isButton ? (
     <button
       className={clsx(
-        "w-full rounded-md p-3 text-2xl uppercase transition-colors duration-75 hover:bg-neutral-200 hover:text-neutral-500",
+        "w-full rounded-md p-2 text-2xl uppercase transition-colors duration-75 hover:bg-neutral-200 hover:text-neutral-500",
         isSelected || isPrimary
           ? "bg-primary text-neutral-500"
           : "bg-neutral-500 text-neutral-0"
