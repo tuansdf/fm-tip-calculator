@@ -1,3 +1,5 @@
+const colors = require("tailwindcss/colors");
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
@@ -12,6 +14,7 @@ module.exports = {
         400: "hsl(186, 14%, 43%)",
         500: "hsl(183, 100%, 15%)",
       },
+      error: colors.red,
     },
   },
   plugins: [],
